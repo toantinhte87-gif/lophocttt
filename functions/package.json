@@ -1,0 +1,16 @@
+{
+  "name": "lophocttt-push",
+  "private": true,
+  "main": "index.js",
+  "engines": {
+    "node": "22"
+  },
+  "dependencies": {
+    "firebase-admin": "^13.0.0",
+    "firebase-functions": "^6.0.0"
+  },
+  "scripts": {
+    "build": "node build-assignment-runtime.cjs",
+    "test": "node --experimental-vm-modules ../tests/assignment-scheduler.test.cjs && node --experimental-vm-modules ../tests/question-images.test.cjs"
+  }
+}

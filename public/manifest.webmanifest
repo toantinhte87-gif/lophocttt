@@ -1,0 +1,13 @@
+{
+  "id": "/",
+  "name": "Lớp học TTT",
+  "short_name": "Lớp học",
+  "start_url": "/#/student",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#111513",
+  "icons": [
+    { "src": "/assets/icon.png", "sizes": "any", "type": "image/png" }
+  ]
+}
