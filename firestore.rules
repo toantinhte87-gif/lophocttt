@@ -1,0 +1,38 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Keep the original classroom data access and teacher PIN login.
+    match /{rootCollection}/{document=**} {
+      allow read, write: if rootCollection != 'Push_Subscriptions'
+                         && rootCollection != 'Bell_Requests';
+    }
+    match /Push_Subscriptions/{id} {
+      allow read: if false;
+      allow create, update: if request.resource.data.keys().hasOnly(['token', 'studentId', 'updatedAt'])
+        && request.resource.data.token is string
+        && request.resource.data.token.size() >= 40
+        && request.resource.data.token.size() <= 4096
+        && request.resource.data.studentId is string
+        && request.resource.data.studentId.size() <= 150
+        && request.resource.data.updatedAt is int
+        && request.resource.data.updatedAt >= request.time.toMillis() - 300000
+        && request.resource.data.updatedAt <= request.time.toMillis() + 300000;
+      allow delete: if true;
+    }
+    match /Bell_Requests/{requestId} {
+      allow get: if true;
+      allow list: if false;
+      allow create: if request.resource.data.keys().hasOnly(['mode', 'message', 'createdAt', 'status'])
+        && request.resource.data.mode in ['all', 'students', 'homework']
+        && request.resource.data.message is string
+        && request.resource.data.message.size() <= 280
+        && (request.resource.data.mode == 'homework' || request.resource.data.message.size() > 0)
+        && request.resource.data.createdAt is int
+        && request.resource.data.createdAt >= request.time.toMillis() - 300000
+        && request.resource.data.createdAt <= request.time.toMillis() + 300000
+        && request.resource.data.status == 'pending';
+      allow update, delete: if false;
+    }
+  }
+}
